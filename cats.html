@@ -29,7 +29,7 @@
   <meta property="twitter:description" content="给汤圆可乐买 🥩🍤 罐头吃~">
   <meta property="twitter:image" content="https://gw.alipayobjects.com/zos/k/vb/1.png">
 
-  <meta name="keywords" content="Markdown,Tw93,MiaoYan,MacApp" />
+  <meta name="keywords" content="Tw93,OpenSource,Sponsor,Pake,Kaku" />
   <meta name="author" content="Tw93" />
   <link rel="shortcut icon" href="https://gw.alipayobjects.com/zos/k/t0/43.png" type="image/x-icon" />
   <link rel="icon" href="https://gw.alipayobjects.com/zos/k/t0/43.png" type="image/x-icon" />
@@ -39,7 +39,6 @@
 <link rel="stylesheet" href="./cats.css" />
 
 <body class="gradient w-full overflow-x-hidden font-letter">
-  <div style="display:none;"><img src="https://miaoyan.app/Release/img/logo.png" alt="logo"></div>
   <a href="/"
     class="text-center w-20 absolute lg:top-12 xl:right-36 lg:right-32 top-8 right-28 text-white py-2 px-2 rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out i18n-home-href"></a>
   <!--Hero-->
@@ -63,7 +62,7 @@
       </div>
     </div>
     <div class="flex flex-wrap -m-4 text-center lg:px-12 px-6 lg:mt-16 md:mt-8 mt-2 justify-end">
-      <div class="md:p-8 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
+      <div class="md:p-8 p-4 xl:w-1/5 md:w-1/4 hidden md:block">
         <div class="all-wrap">
           <div class="all">
             <div class="yarn"></div>
@@ -190,15 +189,15 @@
           </div>
         </div>
       </div>
-      <div class="md:p-6 p-4 xl:ml-48 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
+      <div class="md:p-6 p-4 xl:w-1/5 md:w-1/4 w-1/3">
         <img src="https://gw.alipayobjects.com/zos/k/vb/1.png" class="border-4 rounded-lg"
           style="border-color: #1CAB1A;" />
       </div>
-      <div class="md:p-6 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
+      <div class="md:p-6 p-4 xl:w-1/5 md:w-1/4 w-1/3">
         <img src="https://gw.alipayobjects.com/zos/k/tp/2.png" class="border-4 border-blue-500 rounded-lg"
           style="border-color: #1578FF;" />
       </div>
-      <a class="md:p-6 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full block" href="https://github.com/sponsors/tw93"
+      <a class="md:p-6 p-4 xl:w-1/5 md:w-1/4 w-1/3 block" href="https://github.com/sponsors/tw93"
         target="_blank">
         <img src="https://gw.alipayobjects.com/zos/k/app2/12.png" class="border-4 border-blue-900 rounded-lg"
           style="border-color: #261E2B;" />
@@ -247,12 +246,12 @@
   const name = urlParams.get('name');
   const ua = window.navigator.userAgent.toLowerCase();
   const $langSwitch = document.querySelector('.lang-switcher');
-  const langStorage = localStorage.getItem('miaoyanLang');
+  const langStorage = localStorage.getItem('tw93Lang') || localStorage.getItem('miaoyanLang');
   const $html = document.querySelector('html');
   document.addEventListener('DOMContentLoaded', () => {
     const setLang = (lang) => {
       $html.setAttribute('lang', lang);
-      localStorage.setItem('miaoyanLang', lang);
+      localStorage.setItem('tw93Lang', lang);
       if (lang === 'en') {
         document.title = 'Friends who feed cats';
         document

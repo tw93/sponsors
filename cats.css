@@ -21,7 +21,7 @@
 }
 
 .canvas-div {
-  height: 480px;
+  height: 200px;
 }
 
 @media (max-width: 780px) {

@@ -80,122 +80,23 @@ body {
 }
 
 
-[lang='en'] .i18n-title {
-  letter-spacing: normal;
-  zoom: 0.86;
-  margin-right: 12px;
-}
 
 .hide-before:before {
   display: none !important;
 }
 
 .i18n-title:before {
-  content: '妙言';
+  content: 'Tw93';
 }
 
 [lang='en'] .i18n-title:before {
-  content: 'MiaoYan';
+  content: 'Tw93';
 }
 
 .i18n-cats-desc:before {
-  content: '觉得不错？可以给我家「汤圆 & 可乐」买 🥩🍤 罐头吃！';
+  content: '给我家「汤圆 & 可乐」买 🥩🍤 罐头吃';
 }
 [lang='en'] .i18n-cats-desc:before {
-  content: 'Like it? Buy 🥩🍤 cans for my「TangYuan & Coke」.';
+  content: 'Buy 🥩🍤 cans for my TangYuan & Coke';
 }
 
-.i18n-description:before {
-  content: '轻灵的 Markdown 笔记本伴你写出妙言~';
-}
-[lang='en'] .i18n-description:before {
-  content: 'Lightweight Markdown app to help you write great sentences.';
-}
-
-[lang='en'] .i18n-description {
-  width: 105%;
-}
-
-.i18n-download:before {
-  content: '下载';
-}
-[lang='en'] .i18n-download:before {
-  content: 'Download';
-}
-
-.i18n-feature:before {
-  content: '特征';
-}
-[lang='en'] .i18n-feature:before {
-  content: 'Features';
-}
-.i18n-miao:before {
-  content: '妙';
-}
-[lang='en'] .i18n-miao:before {
-  content: 'Fantastic';
-}
-.i18n-miao-desc:before {
-  content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、国际化、演示模式、单独编辑、PPT 模式、导出文件、内部跳转、自动排版、图床、LaTeX、Mermaid、PlantUML、Markmap';
-}
-[lang='en'] .i18n-miao-desc:before {
-  content: '1. Purely local, no internet access required, source files saved.\a 2. Secure, fully open source Github, no user information uploaded.\a 3. Supports syntax highlighting, dark mode, internationalization, presentation mode, PPT mode, single edit mode, export file, internal jump, document auto typesetting, picture upload, laTeX, mermaid, plantUML, Markmap.';
-}
-
-@media (min-width: 1024px) {
-  [lang='en'] .i18n-jian-view.lg\:pl-48,
-  [lang='en'] .i18n-mei-view.lg\:pl-48 {
-    padding-left: 4rem;
-  }
-}
-.i18n-mei:before {
-  content: '美';
-}
-[lang='en'] .i18n-mei:before {
-  content: 'Beauty';
-}
-.i18n-mei-desc:before {
-  content: '1. 极简的设计风格，没有多余的东西\a 2. 文件夹 + 文件列表 + 编辑器三栏设计，可收起\a 3. 中文默认使用霞鹜文楷字体，让文字也很美';
-}
-[lang='en'] .i18n-mei-desc:before {
-  content: '1. Minimalist design style, no unnecessary stuff.\a 2. Folder + Note list + Editor three-column design, can be tucked away.\a 3. Chinese default use LxgwWenKai font, make the text is also beautiful.';
-}
-
-.i18n-kuai:before {
-  content: '快';
-}
-[lang='en'] .i18n-kuai:before {
-  content: 'Fast';
-}
-.i18n-kuai-desc:before {
-  content: '1. 使用 Swift5 开发，原生极致性能\a 2. 对多文件做了特别的性能优化，确保不卡顿\a 3. 相比当前市面上套壳 Web 的方式轻巧很多';
-}
-[lang='en'] .i18n-kuai-desc:before {
-  content: '1. Developed in Swift5 for the ultimate in native performance.\a 2. Specially optimized for multi-file performance to ensure no lag.\a 3. Much lighter than any electron app on the market.';
-}
-
-.i18n-jian:before {
-  content: '简';
-}
-[lang='en'] .i18n-jian:before {
-  content: 'Simple';
-}
-.i18n-jian-desc:before {
-  content: '1. 操作过程很轻巧，不耽误你的时间\a 2. 编辑体验媲美原生代码编辑器\a 3. 内置众多快捷键助你快人一步';
-}
-[lang='en'] .i18n-jian-desc:before {
-  content: '1. The operation process is very light and does not delay your time.\a 2. Editing experience comparable to native code editor.\a 3. Many built-in shortcuts to help you get up to speed.';
-}
-
-.i18n-footer-title:before {
-  content: '觉得不错？';
-}
-[lang='en'] .i18n-footer-title:before {
-  content: 'Feel Good?';
-}
-.i18n-footer-desc:before {
-  content: '将妙言分享给你的好朋友~';
-}
-[lang='en'] .i18n-footer-desc:before {
-  content: 'Share MiaoYan with your friends~';
-}
