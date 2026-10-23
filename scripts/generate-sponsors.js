@@ -23,13 +23,29 @@ const CONFIG_SPONSORS_TOKEN_PATH = path.join(os.homedir(), '.config', 'miaoyan',
 const SPONSORS_URL = 'https://github.com/sponsors/tw93';
 const OWNER_LOGIN = 'tw93';
 const GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
-const FONT_FAMILY = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'";
-const TITLE_FILL = '#6B7280';
-const BODY_FILL = '#7A7A7A';
+const FONT_FAMILY = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'";
+// Kami warm greys; the dark set follows the viewer's colour scheme because the board has no background of its own.
+const TEXT_STYLE = `
+      .title { fill: #3d3d3a; }
+      .label { fill: #504e49; }
+      .body { fill: #6b6a64; }
+      .placeholder { fill: rgba(20, 20, 19, 0.05); }
+      .backdrop { fill: none; }
+      .friend { fill: #3d3d3a; fill-opacity: calc(1 - var(--age, 0) * 0.29); }
+      @media (prefers-color-scheme: dark) {
+        .title { fill: #e8e6dc; }
+        .label { fill: #c9c7bd; }
+        .body { fill: #9c9a92; }
+        .placeholder { fill: rgba(232, 230, 220, 0.08); }
+        .backdrop { fill: #e8e6dc; }
+        .friend { fill: #e8e6dc; fill-opacity: calc(1 - var(--age, 0) * 0.43); }
+      }`;
 const GITHUB_SECTION_TITLE = 'GitHub Sponsors';
 const FRIENDS_SECTION_TITLE = 'Supportive Friends';
 const ACTIVE_RING_COLOR = '#FAC965';
-const SECTION_GAP = 96;
+const SECTION_GAP = 72;
+const SECTION_TITLE_SIZE = 22;
+const SECTION_CONTENT_TOP = 48;
 
 async function main() {
   const [friends, companySponsors] = await Promise.all([
@@ -238,6 +254,7 @@ async function fetchSponsorshipNodes(token, activeOnly) {
             sponsorships: sponsorshipsAsMaintainer(first: 100, after: $cursor, includePrivate: true, activeOnly: $activeOnly, orderBy: {field: CREATED_AT, direction: DESC}) {
               nodes {
                 sponsorEntity {
+                  __typename
                   ... on User {
                     login
                     name
@@ -249,6 +266,7 @@ async function fetchSponsorshipNodes(token, activeOnly) {
                     name
                     avatarUrl
                     url
+                    websiteUrl
                   }
                 }
                 tier {
@@ -306,7 +324,8 @@ function normalizeSponsorNode(node, isActive) {
     login: sponsor.login,
     name: sponsor.name || sponsor.login,
     avatarUrl: sponsor.avatarUrl,
-    url: sponsor.url || `https://github.com/${sponsor.login}`,
+    url: sponsor.websiteUrl || sponsor.url || `https://github.com/${sponsor.login}`,
+    type: sponsor.__typename === 'Organization' ? 'Organization' : 'User',
     amount: node?.tier?.monthlyPriceInDollars || 0,
     createdAt: node?.createdAt,
     isActive,
@@ -331,17 +350,19 @@ async function loadCachedSponsors() {
     const svg = await fsp.readFile(OUTPUT_PATH, 'utf8');
     const sponsors = [];
     const sponsorRegex =
-      /<g[^>]*data-login="([^"]+)"[^>]*data-active="([^"]+)"[^>]*transform="translate\([^)]*\)">\s*(?:<image[^>]*href="([^"]+)"[^>]*clip-path="url\(#cp-[^"]+\)"[^>]*\/>|<circle[^>]*\/>)(?:\s*<circle[^>]*data-active-ring="true"[^>]*\/>)?\s*<text[^>]*>([^<]*)<\/text>\s*<\/g>/g;
+      /<g[^>]*data-login="([^"]+)"[^>]*data-active="([^"]+)"[^>]*transform="translate\([^)]*\)">\s*(?:<(?:circle|rect)[^>]*data-backdrop="true"[^>]*\/>\s*)?(?:<image[^>]*href="([^"]+)"[^>]*clip-path="url\(#cp-[^"]+\)"[^>]*\/>|<circle[^>]*\/>)(?:\s*<circle[^>]*data-active-ring="true"[^>]*\/>)?\s*<text[^>]*>([^<]*)<\/text>\s*<\/g>/g;
 
     let match;
     while ((match = sponsorRegex.exec(svg))) {
-      const [, login, isActive, avatar, name] = match;
+      const [block, login, isActive, avatar, name] = match;
       if (!login) continue;
+      const typeMatch = block.match(/data-type="([^"]+)"/);
       sponsors.push({
         login,
         name: unescapeText(name) || login,
         avatar: avatar || '',
         url: `https://github.com/${login}`,
+        type: typeMatch ? typeMatch[1] : 'User',
         amount: 0,
         isActive: isActive === 'true',
       });
@@ -364,23 +385,29 @@ async function buildSvg({ companySponsors, sponsors, friends }) {
   await embedAvatarData(sponsors);
   await embedCompanyLogoData(companySponsors);
 
+  // Organizations sponsoring through GitHub sit in the company row instead of the avatar grid.
+  const organizations = sponsors.filter((sponsor) => sponsor.type === 'Organization');
+  const people = sponsors.filter((sponsor) => sponsor.type !== 'Organization');
+
   let cursorY = innerPadding;
   const defs = [];
   const sections = [];
 
-  if (companySponsors.length) {
+  if (companySponsors.length || organizations.length) {
     const companyGrid = renderCompanySponsorGrid({
       companySponsors,
+      organizations,
       x: 0,
       y: cursorY,
       width: contentWidth,
     });
+    defs.push(...companyGrid.defs);
     sections.push(companyGrid.markup);
     cursorY += companyGrid.height + SECTION_GAP;
   }
 
   const sponsorGrid = renderSponsorGrid({
-    sponsors,
+    sponsors: people,
     x: 0,
     y: cursorY,
     width: contentWidth,
@@ -403,6 +430,8 @@ async function buildSvg({ companySponsors, sponsors, friends }) {
 
   const svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img">
     <title>Tw93 Sponsors</title>
+    <style>${TEXT_STYLE}
+    </style>
     <defs>
       ${defs.join('\n')}
     </defs>
@@ -463,60 +492,78 @@ async function embedAvatarData(sponsors) {
   );
 }
 
-function renderCompanySponsorGrid({ companySponsors, x, y, width }) {
-  const logoSize = 100;
-  const baseGap = 56;
+function renderCompanySponsorGrid({ companySponsors, organizations, x, y, width }) {
+  const logoSize = 64;
+  const logoRadius = 14;
+  const backdropInset = 6;
+  const backdrop = `<rect data-backdrop="true" class="backdrop" x="${-backdropInset}" y="${-backdropInset}" width="${logoSize + backdropInset * 2}" height="${logoSize + backdropInset * 2}" rx="${logoRadius + backdropInset}" />`;
+  const baseGap = 72;
   const gapY = 52;
-  let cols = Math.max(1, Math.floor(width / (logoSize + baseGap)));
-  cols = Math.min(cols, Math.max(1, companySponsors.length));
-  const rows = Math.max(1, Math.ceil(companySponsors.length / cols));
-  let spacing = baseGap;
-  if (cols > 1) {
-    spacing = (width - cols * logoSize) / (cols - 1);
-    if (spacing < baseGap) {
-      spacing = baseGap;
-      cols = Math.max(1, Math.floor((width + baseGap) / (logoSize + baseGap)));
-    } else if (spacing > baseGap) {
-      spacing = baseGap;
-    }
-  }
-  const gridWidth = companySponsors.length
-    ? cols * logoSize + Math.max(0, cols - 1) * spacing
-    : width;
-  const gridHeight = companySponsors.length
-    ? rows * logoSize + Math.max(0, rows - 1) * gapY
-    : 140;
+  const items = [
+    ...companySponsors.map((company) => ({ ...company, avatar: company.logo })),
+    ...organizations.map((org) => ({ ...org, isOrganization: true })),
+  ];
+  let cols = Math.max(1, Math.floor((width + baseGap) / (logoSize + baseGap)));
+  cols = Math.min(cols, items.length);
+  const rows = Math.ceil(items.length / cols);
+  const gridWidth = cols * logoSize + (cols - 1) * baseGap;
+  const gridHeight = rows * logoSize + (rows - 1) * gapY;
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   const centerX = width / 2;
-  const titleTopPadding = 12;
-  const contentTop = 52;
-  const titleHeight = 36;
-  const sectionHeight = titleTopPadding + titleHeight + (contentTop - titleHeight) + gridHeight + 32;
-  const sectionTitle = companySponsors.length === 1 ? 'Company Sponsor' : 'Company Sponsors';
+  const sectionHeight = SECTION_CONTENT_TOP + gridHeight + 28;
+  const sectionTitle = items.length === 1 ? 'Company Sponsor' : 'Company Sponsors';
+  const clipDefs = [];
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="${titleTopPadding}" text-anchor="middle" font-size="28" font-weight="600" fill="${TITLE_FILL}">${sectionTitle}</text>
-      <g transform="translate(0, ${contentTop})">
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="${SECTION_TITLE_SIZE}" font-weight="600" class="title">${sectionTitle}</text>
+      <g transform="translate(0, ${SECTION_CONTENT_TOP})">
   `;
 
-  companySponsors.forEach((company, index) => {
+  items.forEach((item, index) => {
     const col = index % cols;
     const row = Math.floor(index / cols);
-    const logoX = offsetX + col * (logoSize + spacing);
+    const rowCount = Math.min(cols, items.length - row * cols);
+    const rowOffsetX = offsetX + ((cols - rowCount) * (logoSize + baseGap)) / 2;
+    const logoX = rowOffsetX + col * (logoSize + baseGap);
     const logoY = row * (logoSize + gapY);
-    const companyItem = `
-      <g transform="translate(${logoX}, ${logoY})">
+    const label = `<text x="${logoSize / 2}" y="${logoSize + 24}" text-anchor="middle" font-size="14" font-weight="600" class="label">${escapeText(truncateText(item.name, 22))}</text>`;
+    let companyItem;
+
+    if (item.isOrganization) {
+      // GitHub org avatars are square, so clip them to the same rounded tile; the markup shape matches loadCachedSponsors.
+      const clipId = `cp-${item.login}`;
+      clipDefs.push(
+        `<clipPath id="${clipId}">
+        <rect x="0" y="0" width="${logoSize}" height="${logoSize}" rx="${logoRadius}" />
+      </clipPath>`,
+      );
+      companyItem = `
+      <g data-login="${escapeAttr(item.login)}" data-active="${item.isActive ? 'true' : 'false'}" data-type="Organization" transform="translate(${logoX}, ${logoY})">
+        ${backdrop}
         ${
-          company.logo
-            ? `<image href="${company.logo}" x="0" y="0" width="${logoSize}" height="${logoSize}" preserveAspectRatio="xMidYMid meet" />`
-            : `<circle cx="${logoSize / 2}" cy="${logoSize / 2}" r="${logoSize / 2}" fill="rgba(0,0,0,0.05)" />`
+          item.avatar
+            ? `<image href="${item.avatar}" x="0" y="0" width="${logoSize}" height="${logoSize}" clip-path="url(#${clipId})" />`
+            : `<circle cx="${logoSize / 2}" cy="${logoSize / 2}" r="${logoSize / 2}" class="placeholder" />`
         }
-        <text x="${logoSize / 2}" y="${logoSize + 32}" text-anchor="middle" font-size="18" font-weight="600" fill="${BODY_FILL}">${escapeText(truncateText(company.name, 18))}</text>
+        ${label}
       </g>
     `;
+    } else {
+      companyItem = `
+      <g transform="translate(${logoX}, ${logoY})">
+        ${backdrop}
+        ${
+          item.avatar
+            ? `<image href="${item.avatar}" x="0" y="0" width="${logoSize}" height="${logoSize}" preserveAspectRatio="xMidYMid meet" />`
+            : `<circle cx="${logoSize / 2}" cy="${logoSize / 2}" r="${logoSize / 2}" class="placeholder" />`
+        }
+        ${label}
+      </g>
+    `;
+    }
 
-    if (company.url) {
-      markup += `<a xlink:href="${escapeAttr(company.url)}" target="_blank" aria-label="${escapeAttr(company.name)}">${companyItem}</a>`;
+    if (item.url) {
+      markup += `<a xlink:href="${escapeAttr(item.url)}" target="_blank" aria-label="${escapeAttr(item.name)}">${companyItem}</a>`;
       return;
     }
 
@@ -528,6 +575,7 @@ function renderCompanySponsorGrid({ companySponsors, x, y, width }) {
   return {
     markup,
     height: sectionHeight,
+    defs: clipDefs,
   };
 }
 
@@ -551,22 +599,21 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const gridHeight = sponsors.length
     ? rows * avatarSize + Math.max(0, rows - 1) * gapY
     : 140;
-  const titleHeight = 36;
-  const sectionHeight = titleHeight + 36 + gridHeight + 32;
+  const sectionHeight = SECTION_CONTENT_TOP + gridHeight + 32;
   const centerX = width / 2;
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="${TITLE_FILL}">${GITHUB_SECTION_TITLE}</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="${SECTION_TITLE_SIZE}" font-weight="600" class="title">${GITHUB_SECTION_TITLE}</text>
   `;
   const clipDefs = [];
 
     if (!sponsors.length) {
     markup += `
       <g transform="translate(0, 60)">
-        <text x="${width / 2}" y="50" text-anchor="middle" font-size="20" font-weight="500" fill="#666666">Become the first Sponsor</text>
+        <text x="${width / 2}" y="50" text-anchor="middle" font-size="20" font-weight="500" class="label">Become the first Sponsor</text>
         <a xlink:href="${SPONSORS_URL}" target="_blank">
-          <text x="${width / 2}" y="85" text-anchor="middle" font-size="15" fill="#999999">Click to support tw93</text>
+          <text x="${width / 2}" y="85" text-anchor="middle" font-size="14" class="body">Click to support tw93</text>
         </a>
       </g>
     </g>`;
@@ -574,7 +621,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   }
 
   markup += `
-    <g transform="translate(0, 60)">
+    <g transform="translate(0, ${SECTION_CONTENT_TOP})">
   `;
 
   sponsors.forEach((sponsor, index) => {
@@ -590,17 +637,18 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     );
     const sponsorCard = `
       <g data-login="${escapeAttr(sponsor.login)}" data-active="${sponsor.isActive ? 'true' : 'false'}" transform="translate(${avatarX}, ${avatarY})">
+        <circle data-backdrop="true" class="backdrop" cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2 - 1}" />
         ${
           sponsor.avatar
             ? `<image href="${sponsor.avatar}" x="0" y="0" width="${avatarSize}" height="${avatarSize}" clip-path="url(#${clipId})" />`
-            : `<circle cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2}" fill="rgba(0,0,0,0.05)" />`
+            : `<circle cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2}" class="placeholder" />`
         }
         ${
           sponsor.isActive
             ? `<circle data-active-ring="true" cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2 - 1.5}" fill="none" stroke="${ACTIVE_RING_COLOR}" stroke-opacity="0.98" stroke-width="2.25" />`
             : ''
         }
-        <text x="${avatarSize / 2}" y="${avatarSize + 22}" text-anchor="middle" font-size="12" fill="${BODY_FILL}">${escapeText(sponsor.name).slice(0, 18)}</text>
+        <text x="${avatarSize / 2}" y="${avatarSize + 22}" text-anchor="middle" font-size="12" class="body">${escapeText(sponsor.name).slice(0, 18)}</text>
       </g>
     `;
 
@@ -621,35 +669,63 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   };
 }
 
+function estimateTextWidth(text, fontSize) {
+  // SVG has no text layout, so line breaks use a conservative per-glyph estimate; each line is centred, so slack only shows as margin.
+  let units = 0;
+  for (const ch of text) {
+    const code = ch.codePointAt(0);
+    if (code > 0x2e80) units += 1;
+    else if (/[mwMW]/.test(ch)) units += 0.8;
+    else if (/[A-Z]/.test(ch)) units += 0.64;
+    else units += 0.54;
+  }
+  return units * fontSize;
+}
+
 function renderFriendTable({ friends, x, y, width }) {
-  const titleY = 0;
-  const tableTop = 44;
-  const columns = 8;
-  const colWidth = width / columns;
-  const rowHeight = 32;
-  const rows = Math.max(1, Math.ceil(friends.length / columns));
-  const tableHeight = rows * rowHeight;
+  const fontSize = 14;
+  const gap = 26;
+  const lineHeight = 30;
+  const maxLineWidth = width - 40;
+  const lines = [];
+  let current = [];
+  let currentWidth = 0;
+  for (const name of [...friends].reverse()) {
+    const nameWidth = estimateTextWidth(name, fontSize);
+    const nextWidth = current.length ? currentWidth + gap + nameWidth : nameWidth;
+    if (current.length && nextWidth > maxLineWidth) {
+      lines.push(current);
+      current = [name];
+      currentWidth = nameWidth;
+    } else {
+      current.push(name);
+      currentWidth = nextWidth;
+    }
+  }
+  if (current.length) lines.push(current);
+
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="${TITLE_FILL}">${FRIENDS_SECTION_TITLE}</text>
-      <g transform="translate(0, 52)">
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="${SECTION_TITLE_SIZE}" font-weight="600" class="title">${FRIENDS_SECTION_TITLE}</text>
+      <g transform="translate(0, ${SECTION_CONTENT_TOP})">
   `;
 
-  const orderedFriends = [...friends].reverse();
-  orderedFriends.forEach((name, index) => {
-    const row = Math.floor(index / columns);
-    const col = index % columns;
-    const textX = col * colWidth + colWidth / 2;
-    const textY = row * rowHeight + rowHeight / 2;
-    markup += `<text x="${textX}" y="${textY}" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="${BODY_FILL}">${escapeText(name)}</text>`;
+  // Newest names lead at full ink and older lines fade like closing credits; the faintest still clears 4.5:1 in both schemes.
+  const lastRow = Math.max(1, lines.length - 1);
+  lines.forEach((names, row) => {
+    const age = (row / lastRow).toFixed(3);
+    const spans = names
+      .map((name, index) => `<tspan${index ? ` dx="${gap}"` : ''}>${escapeText(name)}</tspan>`)
+      .join('');
+    markup += `<text x="${centerX}" y="${row * lineHeight + lineHeight / 2}" text-anchor="middle" dominant-baseline="central" font-size="${fontSize}" class="friend" style="--age: ${age}">${spans}</text>`;
   });
 
   markup += '</g></g>';
 
   return {
     markup,
-    height: tableTop + tableHeight,
+    height: SECTION_CONTENT_TOP + lines.length * lineHeight,
   };
 }
 
