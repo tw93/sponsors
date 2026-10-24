@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate the sponsor board SVG and keep the friend list embedded in CSS in sync.
+ * Generate the sponsor board SVG for READMEs and the same lists as HTML inside cats.html.
  *
  * Usage:
  *   node scripts/generate-sponsors.js
@@ -16,7 +16,10 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const FRIENDS_PATH = path.join(ROOT, 'data', 'friends.json');
 const COMPANY_SPONSORS_PATH = path.join(ROOT, 'data', 'company-sponsors.json');
-const CSS_PATH = path.join(ROOT, 'tailwind.css');
+const WALL_PATH = path.join(ROOT, 'cats.html');
+const AVATAR_DIR = path.join(ROOT, 'assets', 'avatars');
+const WALL_START = '<!-- board:start -->';
+const WALL_END = '<!-- board:end -->';
 const OUTPUT_DIR = path.join(ROOT, 'assets');
 const OUTPUT_PATH = path.join(OUTPUT_DIR, 'sponsors.svg');
 const CONFIG_SPONSORS_TOKEN_PATH = path.join(os.homedir(), '.config', 'miaoyan', 'sponsors-token');
@@ -52,16 +55,16 @@ async function main() {
     loadFriends(),
     loadCompanySponsors(),
   ]);
-  await Promise.all([
-    updateTailwindCss(friends),
-    ensureDir(OUTPUT_DIR),
-  ]);
+  await ensureDir(OUTPUT_DIR);
 
   const sponsorToken = await loadSponsorToken();
 
   const sponsors = await fetchSponsors(sponsorToken);
   const svgContent = await buildSvg({ companySponsors, sponsors, friends });
   await fsp.writeFile(OUTPUT_PATH, svgContent, 'utf8');
+  // buildSvg has embedded every avatar as a data URI by now, so the wall reuses those bytes instead of hotlinking GitHub.
+  await writeAvatarFiles(sponsors);
+  await updateWallHtml({ companySponsors, sponsors, friends });
   console.log(
     `Generated ${path.relative(ROOT, OUTPUT_PATH)} with ${companySponsors.length} company sponsors, ${sponsors.length} GitHub sponsors, and ${friends.length} friends.`,
   );
@@ -145,36 +148,6 @@ async function loadCompanySponsors() {
 
 async function ensureDir(target) {
   await fsp.mkdir(target, { recursive: true });
-}
-
-async function updateTailwindCss(friends) {
-  let css = await fsp.readFile(CSS_PATH, 'utf8');
-  const listJoined = friends.join('、');
-  css = replaceCssContent(css, /--data-friend:\s*'/, listJoined);
-
-  const friendCount = friends.length;
-  const zhDesc = `数据每日自动更新，当前 ${friendCount} 位朋友喜欢汤圆可乐`;
-  const enDesc = `Daily sync · ${friendCount} friends like TangYuan & Coke`;
-  css = replaceCssContent(css, /\.i18n-miao-people-desc:before\s*\{\s*content:\s*'/, zhDesc);
-  css = replaceCssContent(
-    css,
-    /\[lang='en'\]\s*\.i18n-miao-people-desc:before\s*\{\s*content:\s*'/,
-    enDesc,
-  );
-
-  await fsp.writeFile(CSS_PATH, css, 'utf8');
-}
-
-function replaceCssContent(css, markerRegex, value) {
-  const match = css.match(new RegExp(`${markerRegex.source}([^']*)'`));
-  if (!match) {
-    throw new Error(`Unable to locate CSS marker: ${markerRegex}`);
-  }
-  const [snippet, existing] = match;
-  const startIndex = match.index;
-  const prefix = css.slice(0, startIndex);
-  const suffix = css.slice(startIndex + snippet.length);
-  return `${prefix}${snippet.replace(existing, value)}${suffix}`;
 }
 
 async function fetchSponsors(token) {
@@ -357,11 +330,13 @@ async function loadCachedSponsors() {
       const [block, login, isActive, avatar, name] = match;
       if (!login) continue;
       const typeMatch = block.match(/data-type="([^"]+)"/);
+      // The wrapping link keeps the full name and website; the <text> label may be truncated.
+      const link = svg.slice(Math.max(0, match.index - 1000), match.index).match(/<a xlink:href="([^"]+)"[^>]*aria-label="([^"]*)">\s*$/);
       sponsors.push({
         login,
-        name: unescapeText(name) || login,
+        name: (link && unescapeText(link[2])) || unescapeText(name) || login,
         avatar: avatar || '',
-        url: `https://github.com/${login}`,
+        url: link ? unescapeText(link[1]) : `https://github.com/${login}`,
         type: typeMatch ? typeMatch[1] : 'User',
         amount: 0,
         isActive: isActive === 'true',
@@ -727,6 +702,111 @@ function renderFriendTable({ friends, x, y, width }) {
     markup,
     height: SECTION_CONTENT_TOP + lines.length * lineHeight,
   };
+}
+
+const AVATAR_EXTENSIONS = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+};
+
+function avatarFileName(sponsor) {
+  const match = /^data:([^;]+);base64,/.exec(sponsor.avatar || '');
+  if (!match) return null;
+  return `${sponsor.login}.${AVATAR_EXTENSIONS[match[1]] || 'png'}`;
+}
+
+async function writeAvatarFiles(sponsors) {
+  await ensureDir(AVATAR_DIR);
+  const keep = new Set();
+  for (const sponsor of sponsors) {
+    const fileName = avatarFileName(sponsor);
+    if (!fileName) continue;
+    keep.add(fileName);
+    const base64 = sponsor.avatar.slice(sponsor.avatar.indexOf(',') + 1);
+    await fsp.writeFile(path.join(AVATAR_DIR, fileName), Buffer.from(base64, 'base64'));
+  }
+  for (const fileName of await fsp.readdir(AVATAR_DIR)) {
+    if (!keep.has(fileName)) await fsp.unlink(path.join(AVATAR_DIR, fileName));
+  }
+}
+
+function bilingual(zh, en) {
+  return `<span class="zh">${zh}</span><span class="en">${en}</span>`;
+}
+
+function avatarImage(sponsor, size) {
+  const fileName = avatarFileName(sponsor);
+  const src = fileName ? `./assets/avatars/${fileName}` : `https://github.com/${encodeURIComponent(sponsor.login)}.png?size=${size * 2}`;
+  return `<img src="${escapeAttr(src)}" alt="" width="${size}" height="${size}" loading="lazy" decoding="async" />`;
+}
+
+function renderWallBoard({ companySponsors, sponsors, friends }) {
+  const organizations = sponsors.filter((sponsor) => sponsor.type === 'Organization');
+  const people = sponsors.filter((sponsor) => sponsor.type !== 'Organization');
+  const parts = [];
+
+  const companies = [
+    ...companySponsors.map((company) => ({
+      name: company.name,
+      url: company.url,
+      image: `<img src="./${escapeAttr(company.logoPath)}" alt="" width="56" height="56" loading="lazy" decoding="async" />`,
+    })),
+    ...organizations.map((org) => ({ name: org.name, url: org.url, image: avatarImage(org, 56) })),
+  ];
+  if (companies.length) {
+    parts.push(`<div class="board-group">
+        <h3>${bilingual('公司赞助', 'Company sponsors')}</h3>
+        <ul class="companies">
+${companies
+  .map(
+    (company) =>
+      `          <li><a href="${escapeAttr(company.url || SPONSORS_URL)}" target="_blank" rel="noopener">${company.image}<span>${escapeText(company.name)}</span></a></li>`,
+  )
+  .join('\n')}
+        </ul>
+      </div>`);
+  }
+
+  if (people.length) {
+    parts.push(`<div class="board-group">
+        <h3>GitHub Sponsors</h3>
+        <ul class="people">
+${people
+  .map(
+    (sponsor) =>
+      `          <li${sponsor.isActive ? ' class="active"' : ''}><a href="${escapeAttr(sponsor.url || `https://github.com/${sponsor.login}`)}" target="_blank" rel="noopener" title="${escapeAttr(sponsor.name)}">${avatarImage(sponsor, 56)}<span>${escapeText(sponsor.name)}</span></a></li>`,
+  )
+  .join('\n')}
+        </ul>
+      </div>`);
+  }
+
+  // Newest first, fading toward the oldest like the README board.
+  const ordered = [...friends].reverse();
+  const lastIndex = Math.max(1, ordered.length - 1);
+  parts.push(`<div class="board-group">
+        <h3>${bilingual('打赏的朋友', 'Friends who chipped in')}</h3>
+        <p class="friends">
+${ordered
+  .map((name, index) => `          <span style="--age: ${(index / lastIndex).toFixed(3)}">${escapeText(name)}</span>`)
+  .join('\n')}
+        </p>
+      </div>`);
+
+  return parts.join('\n      ');
+}
+
+async function updateWallHtml(board) {
+  const html = await fsp.readFile(WALL_PATH, 'utf8');
+  const start = html.indexOf(WALL_START);
+  const end = html.indexOf(WALL_END);
+  if (start === -1 || end === -1 || end < start) {
+    throw new Error(`Unable to locate ${WALL_START} and ${WALL_END} in ${WALL_PATH}`);
+  }
+  const next = `${html.slice(0, start + WALL_START.length)}\n      ${renderWallBoard(board)}\n      ${html.slice(end)}`;
+  await fsp.writeFile(WALL_PATH, next, 'utf8');
 }
 
 function escapeText(value) {

@@ -1,102 +1,300 @@
 @import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
 
+/* Source Han Serif subset for the page copy only (scripts/build-fonts.py); sponsor and friend names use the system sans,
+   so the daily list never needs a new subset. */
+@font-face {
+  font-family: "Cats Serif SC";
+  src: local("Source Han Serif SC"), local("Noto Serif CJK SC"), url("/fonts/cats-serif-sc-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "Cats Serif SC";
+  src: local("Source Han Serif SC SemiBold"), local("Noto Serif CJK SC SemiBold"), url("/fonts/cats-serif-sc-semibold.woff2") format("woff2");
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+
+/* Kami tokens as the product sites use them; the brand is the wall's existing green, CIELAB L* 33. */
 :root {
-  --data-friend: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、**飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚、Linmi、小小小小小国、zhyncs、YuYuMi、匿名妙友、**辉、Robin、孑虚乌有、嗨嗨皮、熏锅锅、**泰、EugEnE 六金、Chen Chen、走鹃、飞🇨🇳🇨🇳、刘奇、**雄、邓旭东、**主、**得、*过、Wayne、再见孙悟空、牧野 Peikon、Grug、**文、奥特饭、LXC、瓮 J、董超、永遇乐、匿名妙友、Koobal、simonkuang、大团🐱、xiang、凨、Jimmy、互花米草、嘟嘟噜、晶晶、CLICK、折宝亭、*懂、*双、*泰、January、**招、Kamus、MING、WZ、夏清昕_Nicole、Rio :)、星星、Kieda、我们的曾经、*钦、我们的曾经、匿名妙友、Devqiu599、**梅、匿名妙友、坐和坐宽、匿名妙友、pan、明明会多努力学习、匿名妙友、Zan_Minkian、匿名妙友、李騁昊、西苑前、depthsy、Frank、Arthur、匿名妙友、Uwant、我L.N、Yorks0n、匿名妙友、曉傑同學、MartinKuo-XY、Pake很好用、刘青林、刘志龙、Images、毛毛、Remember、Feng、Edward、**书、Devqiu599、Shawn Harmsen、xxholly32、晚天、**谷、*祥、南京雨花吴彦祖、屠夫哥哥、Cheers、Cindy、严济之、落叶挽歌、xxholly32、匿名妙友、LL、美式咖啡、yancey、阿栋 Adonis、**渝、*鑫、**玲、**飞、**伦、darklinden、夏永锋、匿名妙友、Burn、XX、hpc4you阿斌、Reda、Joe-董健、HatMatrix、*洋、匿名妙友、世界线收束、一身都是月、匿名妙友、lx、匿名妙友、davywalker、匿名妙友、赵环宇 Henry、HE、tzxdtc、xxholly32、LittleWang6770、rexarski、shawnharmsen、**财、不是周日是周一、往事随风、DustinTang、凌一、徐俊国、Witt、祁陌、攸、*丽、*㒰、**轩、LZ、草草、吴超、Joel、匿名妙友、SkyWang、长发飘飘、LXA、梦游、HE、cc、Ga091an、沉寂、a锦龙、兜率、黑天小飞侠、YJ、Kelly、*涵、**钦、**涛、**高、**航、**文、**菲、**祚、**栋、Tyler、凌一、森度、童建飙、zhouwfang、HappyFox001、yo1995、mrmuminov、王胡砸2、zozo☁️、Cheers、*明、**卓、**彬、王有毒、液态蟒蛇🥖Castor、豪、后现代骑士、假城、Spencer、ʚDayday🥱ɞ、小光.Re2、Zy.😶、充钱就AC、王恩浩、👍、**莹、**山、AnNiE、源、jmchen、Fine、**碧、匿名妙友、Steven.Huang、He、**源、*勇、windwild、我的朋友叫垃圾呆、lc、匿名妙友、小志、*鑫、**令、*方、**枫、**栋、阿里舍得、null、翌日会景、匿名妙友、梦鸽、Barry、Carlos.Young、略仔、zhancx、徐精华、Wenky Xia、OxFF、Bosco.H、张子恒、王瑞环、欣汶要变超人、大敏君、李继刚、*洋、*飞、小志Chris、清悯、当当爸、葛新颖🚲、Joy、**元、y. Integrity、乌鱼小子、**恺、JasonSubmara、*强、梅杰、匿名妙友、小逗。🎈、🥕、Temoa、shuang、**仙、散人的伞、*孜、于、**会';
+  --parchment: #f5f4ed;
+  --ivory: #faf9f5;
+  --warm-sand: #e8e6dc;
+  --line: #d8d5c8;
+  --near-black: #363433;
+  --dark-warm: #3d3d3a;
+  --olive: #504e49;
+  --stone: #6b6a64;
+  --brand: #36563c;
+  --brand-light: #4a6e50;
+  --active-ring: #fac965;
+  --serif: Charter, Georgia, "Cats Serif SC", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --gutter: 64px;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.i18n-miao-people-desc:before {
-  content: '数据每日自动更新，当前 284 位朋友喜欢汤圆可乐';
-}
-[lang='en'] .i18n-miao-people-desc:before {
-  content: 'Daily sync · 284 friends like TangYuan & Coke';
-}
+html[data-lang="zh"] .en,
+html[data-lang="en"] .zh { display: none !important; }
 
 body {
-  font-family: "TsangerJinKai02", "STKaiti", "KaiTi", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  font-display: swap;
-}
-
-.font-letter {
-  letter-spacing: 0.5px;
+  margin: 0;
+  min-width: 320px;
+  background: var(--parchment);
+  color: var(--near-black);
+  font-family: var(--serif);
+  font-size: 17px;
   line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+p { text-wrap: pretty; }
+a { color: var(--brand); text-decoration: none; }
+a:hover { color: var(--brand-light); }
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand) 55%, transparent);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
-.miaoyan-image-container {
-  padding-bottom: 62.5%;
-  height: 0;
+.wide { max-width: 1120px; margin: 0 auto; padding-inline: var(--gutter); }
+
+/* Nav */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 28px;
+  padding-bottom: 28px;
+}
+.mark { color: var(--near-black); font-size: 20px; font-weight: 600; letter-spacing: -0.2px; }
+.mark:hover { color: var(--near-black); }
+.lang-toggle {
+  min-height: 36px;
+  padding: 6px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--ivory);
+  color: var(--near-black);
+  font: 500 14px/1.4 var(--serif);
+  cursor: pointer;
+  transition: background-color 0.12s ease-out;
+}
+.lang-toggle:hover { background: var(--warm-sand); }
+
+/* Hero */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 48px;
+  padding-top: 40px;
+  padding-bottom: 64px;
+}
+.hero h1 {
+  margin: 0;
+  color: var(--near-black);
+  font-size: 52px;
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.6px;
+  text-wrap: balance;
+}
+.lede { margin: 20px 0 0; text-wrap: balance; word-break: keep-all; color: var(--olive); font-size: 19px; line-height: 1.6; }
+.lede .product { color: var(--near-black); font-weight: 600; }
+.cats { display: flex; gap: 24px; }
+.cats figure { margin: 0; text-align: center; }
+.cats img {
+  display: block;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--warm-sand);
+}
+.cats figcaption { margin-top: 12px; color: var(--olive); font-size: 15px; }
+
+/* Payment cards */
+.pay {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding-bottom: 96px;
+}
+.pay-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 28px 28px;
+  border-radius: var(--radius-card);
+  background: var(--ivory);
+  text-align: center;
+}
+/* Every card opens on the same square, so the three titles share one line. */
+.pay-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 208px;
+  aspect-ratio: 1;
+}
+.pay-card .qr {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  background: #fff;
+}
+.pay-card h2 { margin: 20px 0 0; color: var(--dark-warm); font-size: 20px; font-weight: 600; line-height: 1.3; }
+.pay-card .hint { margin: 6px 0 0; color: var(--stone); font-size: 15px; line-height: 1.5; }
+.gh-mark { display: block; width: 72px; height: 72px; color: var(--near-black); }
+/* The button adds 64px, so the mark's box gives that back and the three cards end on one line. */
+.pay-card.github .pay-visual { aspect-ratio: 208 / 144; }
+.pay-card.github .btn { margin-top: 20px; }
+
+.for-touch, .for-wechat { display: none !important; }
+@media (hover: none) and (pointer: coarse) {
+  .for-pointer { display: none !important; }
+  .for-touch { display: inline-flex !important; }
+  p.for-touch { display: block !important; }
+  .in-wechat .for-touch { display: none !important; }
+  .in-wechat .for-wechat { display: block !important; }
+  /* In WeChat the Alipay link cannot leave the app, so the code stays the way in. */
+  .in-wechat .pay-card a.for-touch { display: none !important; }
+}
+.pay-card a.for-touch { margin-top: 16px; }
+
+/* One button pair, as on the product sites. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 158px;
+  min-height: 44px;
+  padding: 11px 28px;
+  border-radius: var(--radius-pill);
+  font: 500 15px/1.55 var(--serif);
+  transition: background-color 0.12s ease-out, border-color 0.12s ease-out;
+}
+.btn-primary { border: 1px solid var(--brand); background: var(--brand); color: var(--ivory); }
+.btn-primary:hover { border-color: var(--brand-light); background: var(--brand-light); color: var(--ivory); }
+.btn-secondary { border: 1px solid var(--line); background: var(--ivory); color: var(--near-black); }
+.btn-secondary:hover { background: var(--warm-sand); color: var(--near-black); }
+
+/* Thanks board */
+.board { padding-bottom: 96px; }
+.section-head { display: grid; gap: 12px; margin-bottom: 40px; text-align: center; }
+.section-head h2 { margin: 0; color: var(--dark-warm); font-size: 32px; font-weight: 500; line-height: 1.2; letter-spacing: -0.3px; }
+.section-head p { margin: 0; word-break: keep-all; color: var(--olive); font-size: 16px; line-height: 1.55; }
+.board-group + .board-group { margin-top: 56px; }
+.board-group h3 { margin: 0 0 24px; color: var(--dark-warm); font-size: 20px; font-weight: 600; text-align: center; }
+.board ul { margin: 0; padding: 0; list-style: none; }
+.board li a { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--olive); }
+.board li a:hover { color: var(--near-black); }
+.board li span {
+  max-width: 100%;
+  overflow: hidden;
+  font: 13px/1.4 var(--sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.board img { display: block; width: 56px; height: 56px; object-fit: cover; background: var(--warm-sand); }
+
+.companies { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px 48px; }
+.companies img { border-radius: 14px; }
+.companies li span { font-weight: 600; }
+
+.people { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 24px 8px; }
+.people img { border-radius: 50%; }
+.people .active img { box-shadow: 0 0 0 2px var(--parchment), 0 0 0 4px var(--active-ring); }
+
+/* Newest names lead in dark-warm and fade to stone, which still clears 4.5:1 on parchment. */
+.friends {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 20px;
+  max-width: 960px;
+  margin: 0 auto;
+  font: 15px/1.6 var(--sans);
+}
+.friends span { color: var(--stone); color: color-mix(in srgb, var(--stone) calc(var(--age) * 100%), var(--dark-warm)); }
+
+/* Footer */
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 32px;
+  padding-top: 32px;
+  padding-bottom: 48px;
+  position: relative;
+  color: var(--stone);
+  font-size: 15px;
+}
+.foot::before { content: ""; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); border-top: 1px solid var(--line); }
+.foot p { margin: 0; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.foot a { color: var(--olive); }
+.foot a:hover { color: var(--near-black); }
+
+@media (max-width: 960px) {
+  .hero { gap: 32px; }
+  .cats { gap: 16px; }
+  .cats img { width: 160px; height: 160px; }
 }
 
-.gradient {
-  background: linear-gradient(60deg, #36563c 0%, #36563c 100%);
+@media (max-width: 720px) {
+  .hero { grid-template-columns: 1fr; }
 }
 
-.i18n-switch-lang,
-.i18n-home-href {
-  z-index: 100;
+/* Below this the GitHub hint wraps in a third column, so the two codes sit side by side and GitHub takes the full row. */
+@media (max-width: 820px) {
+  .pay { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pay-card.github { grid-column: 1 / -1; padding: 24px 20px; }
+  .pay-card.github .pay-visual { aspect-ratio: auto; }
+  .gh-mark { width: 48px; height: 48px; }
 }
 
-.i18n-miao-href:before {
-  content: '喂猫 ❤️';
-}
-[lang='en'] .i18n-miao-href:before {
-  content: 'Like ❤️';
-}
-
-.i18n-miao-people:before {
-  content: '喂猫的朋友们';
-}
-[lang='en'] .i18n-miao-people:before {
-  content: 'Friends who feed cats';
+@media (max-width: 880px) {
+  :root { --gutter: 32px; }
+  .hero h1 { font-size: 40px; }
+  .section-head h2 { font-size: 26px; }
+  .pay { gap: 16px; }
+  .pay-card { padding: 24px 18px 22px; }
 }
 
-.i18n-miao-support-heading:before {
-  content: '感谢大家请汤圆和可乐吃罐头';
-}
-[lang='en'] .i18n-miao-support-heading:before {
-  content: 'Thanks for supporting TangYuan & Coke';
-}
-
-.i18n-share-twitter:before {
-  content: '一键分享到 Twitter';
-}
-[lang='en'] .i18n-share-twitter:before {
-  content: 'Share To Twitter';
-}
-
-.i18n-home-href:before {
-  content: '首页';
-}
-[lang='en'] .i18n-home-href:before {
-  content: 'Home';
-}
-
-.i18n-switch-lang:before {
-  content: 'EN';
-}
-[lang='en'] .i18n-switch-lang:before {
-  content: '中文';
+@media (max-width: 560px) {
+  :root { --gutter: 20px; }
+  .nav { padding-top: 20px; padding-bottom: 20px; }
+  .hero { padding-top: 16px; padding-bottom: 40px; gap: 32px; }
+  .hero h1 { font-size: 32px; letter-spacing: -0.3px; }
+  .lede { font-size: 17px; }
+  .cats { gap: 16px; }
+  .cats img { width: min(40vw, 160px); height: min(40vw, 160px); }
+  .pay { gap: 12px; padding-bottom: 72px; }
+  .pay-card { padding: 16px 12px 18px; border-radius: 16px; }
+  .pay-card h2 { margin-top: 12px; font-size: 18px; }
+  .pay-card .hint { font-size: 14px; }
+  .pay-card .qr { border-radius: 8px; }
+  .pay-card a.for-touch { min-width: 0; width: 100%; padding-inline: 12px; margin-top: 12px; }
+  .companies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 12px; }
+  .people { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 18px 4px; }
+  .people img { width: 48px; height: 48px; }
+  .board li span { font-size: 12px; }
+  .friends { gap: 4px 16px; font-size: 14px; }
+  .foot { flex-direction: column; align-items: flex-start; }
 }
 
-
-
-.hide-before:before {
-  display: none !important;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
 }
-
-.i18n-title:before {
-  content: 'Tw93';
-}
-
-[lang='en'] .i18n-title:before {
-  content: 'Tw93';
-}
-
-.i18n-cats-desc:before {
-  content: '给我家「汤圆 & 可乐」买 🥩🍤 罐头吃';
-}
-[lang='en'] .i18n-cats-desc:before {
-  content: 'Buy 🥩🍤 cans for my TangYuan & Coke';
-}
-
