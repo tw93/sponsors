@@ -9,12 +9,12 @@ Supports all projects: [Pake](https://github.com/tw93/Pake), [MiaoYan](https://g
 - `cats.html`: the sponsor wall page; the board between `<!-- board:start -->` and `<!-- board:end -->` is generated
 - `tailwind.css`: style source, built into `build.css` by `npm run build`
 - `scripts/generate-sponsors.js`: fetches GitHub Sponsors via GraphQL, writes `assets/sponsors.svg`, `assets/avatars/` and the board in `cats.html`
-- `scripts/build-fonts.py`: subsets Source Han Serif into `fonts/` for the page copy; rerun after editing Chinese copy in `cats.html`
+- `cats.css`: the CSS cat animation
 - `data/friends.json`: WeChat and Alipay friends, newest first
 - `data/company-sponsors.json`: company sponsors config
 - `assets/sponsors.svg`: generated sponsor board SVG for READMEs
 - `assets/company-sponsors/`: company logo files
-- `assets/img/`: cat photos, payment codes, icons and the share image
+- `assets/img/`: cat photos, payment cards, the crowd sprite, project logos for `?name=` and the share image
 
 ## Development
 

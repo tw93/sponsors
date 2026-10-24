@@ -1,282 +1,95 @@
 @import 'tailwindcss/base';
-
-/* Source Han Serif subset for the page copy only (scripts/build-fonts.py); sponsor and friend names use the system sans,
-   so the daily list never needs a new subset. */
-@font-face {
-  font-family: "Cats Serif SC";
-  src: local("Source Han Serif SC"), local("Noto Serif CJK SC"), url("/fonts/cats-serif-sc-regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
-}
-@font-face {
-  font-family: "Cats Serif SC";
-  src: local("Source Han Serif SC SemiBold"), local("Noto Serif CJK SC SemiBold"), url("/fonts/cats-serif-sc-semibold.woff2") format("woff2");
-  font-weight: 500 700;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
-}
-
-/* The tokens mole.fit and kami.tw share, so the wall reads as the same family. */
-:root {
-  --parchment: #f5f4ed;
-  --ivory: #faf9f5;
-  --warm-sand: #e8e6dc;
-  --border-soft: #f1eee5;
-  --line: #d8d5c8;
-  --border-card: color-mix(in srgb, var(--border-soft) 70%, var(--line));
-  --near-black: #363433;
-  --dark-warm: #3d3d3a;
-  --olive: #504e49;
-  --stone: #6b6a64;
-  --brand: #144a74;
-  --ink: #34558a;
-  --mole-dark: #33302a;
-  --mole-ink: #f4f2ec;
-  --active-ring: #fac965;
-  /* The old wall's bars, darkened until white labels clear 4.5:1. */
-  --wechat: #07803e;
-  --alipay: #1368e0;
-  --github: #24292f;
-  --serif: Charter, Georgia, "Cats Serif SC", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
-  --gutter: 64px;
-  --section-gap: 84px;
-}
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 html[data-lang="zh"] .en,
 html[data-lang="en"] .zh { display: none !important; }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  background: var(--parchment);
-  color: var(--near-black);
-  font-family: var(--serif);
-  font-size: 17px;
+  font-family: "TsangerJinKai02", "STKaiti", "KaiTi", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-display: swap;
+}
+
+.font-letter {
+  letter-spacing: 0.5px;
   line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-p { text-wrap: pretty; }
-a { color: var(--ink); text-decoration: none; transition: color 0.12s ease-out; }
-a:hover { color: var(--brand); }
-:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--brand) 55%, transparent);
-  outline-offset: 3px;
-  border-radius: 6px;
 }
 
-.wide { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
+.gradient {
+  background: linear-gradient(60deg, #36563c 0%, #36563c 100%);
+}
 
-/* Nav: the parchment glass pill from mole.fit, pulled out by its padding so the mark lines up with the column. */
-.nav-wrap { position: sticky; top: 0; z-index: 10; padding-top: 16px; }
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-inline: -14px;
-  padding: 8px 8px 8px 14px;
-  border: 1px solid var(--border-soft);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ivory) 82%, transparent);
-  -webkit-backdrop-filter: saturate(1.4) blur(14px);
-  backdrop-filter: saturate(1.4) blur(14px);
+.nav-button {
+  z-index: 100;
 }
-.mark { display: inline-flex; align-items: center; gap: 10px; color: var(--near-black); font-size: 17px; font-weight: 600; }
-.mark:hover { color: var(--near-black); }
-.mark img { width: 28px; height: 28px; border-radius: 50%; }
-.lang-toggle {
-  min-height: 36px;
-  padding: 6px 14px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--olive);
-  font: 400 14px/1.4 var(--serif);
-  cursor: pointer;
-  transition: background-color 0.12s ease-out, color 0.12s ease-out;
-}
-.lang-toggle:hover { background: var(--warm-sand); color: var(--near-black); }
 
-/* Hero: the wordmark opening of the product sites, closed by the same faint hairline. */
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 48px;
-  padding-top: 72px;
-  padding-bottom: 56px;
-  margin-bottom: var(--section-gap);
-  background: linear-gradient(var(--border-soft), var(--border-soft)) bottom / calc(100% - 2 * var(--gutter)) 1px no-repeat;
+/* Sponsor board: the same groups as assets/sponsors.svg, as HTML so it stays readable on phones and visible to search. */
+.board-group {
+  margin-top: 32px;
+  text-align: center;
 }
-.hero h1 {
-  margin: 0 0 28px;
-  color: var(--near-black);
-  font-size: 88px;
-  font-weight: 500;
-  line-height: 1.04;
-  letter-spacing: -1.4px;
-  text-wrap: balance;
+.board-group h3 {
+  margin: 0 0 24px;
+  color: #3d3d3a;
+  font: 600 20px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  letter-spacing: 0;
 }
-html[data-lang="zh"] .hero h1 { font-weight: 400; letter-spacing: 0; }
-.tagline { margin: 0; color: var(--olive); font-size: 21px; line-height: 1.5; text-wrap: pretty; }
-html[data-lang="zh"] .tagline { font-size: 19px; line-height: 1.6; word-break: keep-all; }
-.tagline .product { color: var(--near-black); font-weight: 600; }
-.cats { display: flex; gap: 20px; }
-.cats figure { margin: 0; text-align: center; }
-.cats img {
-  display: block;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: var(--warm-sand);
-}
-.cats figcaption { margin-top: 12px; color: var(--stone); font-size: 14px; line-height: 1.4; }
-
-/* Section head: title, one lede, 24px to the content, as on mole.fit. */
-section { margin-bottom: var(--section-gap); }
-main > section:last-child { margin-bottom: 0; }
-.section-head { margin-bottom: 24px; }
-.section-title { margin: 0; color: var(--dark-warm); font-size: 32px; font-weight: 500; line-height: 1.2; letter-spacing: -0.3px; text-wrap: balance; }
-.section-lede { margin: 12px 0 0; color: var(--olive); font-size: 16px; line-height: 1.6; }
-html[data-lang="zh"] .section-lede { word-break: keep-all; }
-
-/* Payment tiles: the old wall's code-over-bar cards, redrawn in the paper palette. */
-.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
-.tile { display: flex; flex-direction: column; min-width: 0; }
-.tile-link { display: flex; flex-direction: column; color: inherit; }
-.tile-link:hover { color: inherit; }
-.tile-face {
+.board li a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 18px;
-  aspect-ratio: 1;
-  padding: 32px;
-  border: 1px solid var(--border-card);
-  border-bottom: 0;
-  border-radius: 16px 16px 0 0;
-  background: #fff;
+  gap: 8px;
+  color: #504e49;
 }
-.tile-face .qr { display: block; width: 100%; height: auto; }
-.gh-mark { display: block; width: 72px; height: 72px; color: var(--github); }
-.tile-price { color: var(--stone); font-size: 15px; line-height: 1.5; text-align: center; }
-.tile-bar {
-  margin: 0;
-  padding: 13px 16px;
-  border-radius: 0 0 16px 16px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.4;
-  text-align: center;
-  transition: background-color 0.12s ease-out;
-}
-.wechat .tile-bar { background: var(--wechat); }
-.alipay .tile-bar { background: var(--alipay); }
-.github .tile-bar { background: var(--github); }
-.tile-link:hover .tile-bar { background: color-mix(in srgb, var(--github) 86%, #fff); }
-.tile-note { margin: 12px 0 0; color: var(--stone); font-size: 14px; line-height: 1.5; text-align: center; }
-a.tile-note { color: var(--ink); font-weight: 500; }
-
-.for-touch, .for-wechat { display: none !important; }
-@media (hover: none) and (pointer: coarse) {
-  .for-touch { display: block !important; }
-  /* In WeChat the Alipay link cannot leave the app, so the code stays the way in. */
-  .in-wechat .for-touch { display: none !important; }
-  .in-wechat .for-wechat { display: block !important; }
-}
-
-/* Thanks board */
-.board-group + .board-group { margin-top: 48px; }
-.board-group h3 { margin: 0 0 20px; color: var(--dark-warm); font-size: 20px; font-weight: 500; line-height: 1.3; }
-.board ul { margin: 0; padding: 0; list-style: none; }
-.board li a { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--olive); }
-.board li a:hover { color: var(--near-black); }
+.board li a:hover { color: #36563c; }
 .board li span {
   max-width: 100%;
   overflow: hidden;
-  font: 13px/1.4 var(--sans);
+  font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  letter-spacing: 0;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.board img { display: block; width: 56px; height: 56px; object-fit: cover; background: var(--warm-sand); }
+.board img { display: block; width: 64px; height: 64px; object-fit: cover; background: #f1eee5; }
 
-.companies { display: flex; flex-wrap: wrap; gap: 24px 40px; }
+.companies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px 40px;
+}
 .companies img { border-radius: 14px; }
-.companies li span { font-weight: 600; }
+.companies li span { font-size: 13px; font-weight: 600; }
 
-/* Fixed cells spread edge to edge; the negative inset gives back the cell padding beside each avatar, so the first and
-   last avatars sit on the column edges like the headings above them. */
-.board .people { --cell: 104px; display: grid; grid-template-columns: repeat(auto-fill, var(--cell)); justify-content: space-between; gap: 24px 8px; margin-inline: calc((56px - var(--cell)) / 2); }
+.people {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 24px 8px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
 .people img { border-radius: 50%; }
-.people .active img { box-shadow: 0 0 0 2px var(--parchment), 0 0 0 4px var(--active-ring); }
+.people .active img { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #fac965; }
 
-/* Newest names lead in dark-warm and fade to stone, which still clears 4.5:1 on parchment. */
-.friends { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0; font: 15px/1.6 var(--sans); }
-.friends span { color: var(--stone); color: color-mix(in srgb, var(--stone) calc(var(--age) * 100%), var(--dark-warm)); }
-
-/* Footer: the full-bleed mole-brown band. */
-.foot { margin-top: var(--section-gap); padding: 56px 0 48px; background: var(--mole-dark); color: color-mix(in srgb, var(--mole-ink) 72%, transparent); }
-.foot-inner { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 24px 56px; }
-.foot-mark { color: #fff; font-size: 22px; font-weight: 500; line-height: 1.1; letter-spacing: -0.2px; }
-.foot-mark:hover { color: #fff; }
-.foot-col-title { margin: 0 0 12px; color: color-mix(in srgb, #fff 92%, transparent); font-size: 13px; font-weight: 600; letter-spacing: 0.2px; }
-.foot nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
-.foot nav a { color: color-mix(in srgb, var(--mole-ink) 68%, transparent); font-size: 15px; }
-.foot nav a:hover { color: #fff; }
-
-@media (max-width: 960px) {
-  .hero { gap: 32px; }
-  .hero h1 { font-size: 72px; }
-  .cats { gap: 16px; }
-  .cats img { width: 160px; height: 160px; }
+/* Newest names first, fading from dark to stone. */
+.friends {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 18px;
+  max-width: 960px;
+  margin: 0 auto;
+  font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  letter-spacing: 0;
 }
+.friends span { color: #6b6a64; color: color-mix(in srgb, #6b6a64 calc(var(--age) * 100%), #3d3d3a); }
 
-@media (max-width: 880px) {
-  :root { --gutter: 32px; --section-gap: 72px; }
-  .hero h1 { font-size: 64px; letter-spacing: -1px; }
-  .tagline, html[data-lang="zh"] .tagline { font-size: 18px; }
-  .section-title { font-size: 26px; }
-  .tiles { gap: 16px; }
-  .tile-face { padding: 24px; }
-}
-
-@media (max-width: 720px) {
-  .hero { grid-template-columns: 1fr; padding-top: 48px; padding-bottom: 40px; }
-  /* Two codes side by side, GitHub on its own row. */
-  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tile.github { grid-column: 1 / -1; }
-  .github .tile-face { flex-direction: row; aspect-ratio: auto; gap: 16px; padding: 24px; }
-  .gh-mark { width: 44px; height: 44px; }
-}
-
-@media (max-width: 560px) {
-  :root { --gutter: 20px; }
-  .nav-wrap { padding-top: 12px; }
-  .nav { margin-inline: -8px; padding-left: 10px; }
-  .hero { padding-top: 40px; gap: 28px; }
-  .hero h1 { margin-bottom: 20px; font-size: 52px; letter-spacing: -0.6px; }
-  .tagline, html[data-lang="zh"] .tagline { font-size: 17px; }
-  .cats img { width: min(40vw, 160px); height: min(40vw, 160px); }
-  .tiles { gap: 12px; }
-  .tile-face { padding: 14px; }
-  .tile-bar { padding: 10px 8px; font-size: 15px; }
-  .companies { gap: 20px 28px; }
-  .board .people { --cell: 76px; gap: 18px 4px; margin-inline: calc((48px - var(--cell)) / 2); }
-  .people img { width: 48px; height: 48px; }
-  .board li span { font-size: 12px; }
-  .friends { gap: 4px 16px; font-size: 14px; }
-  .foot { padding: 40px 0 36px; }
-  .foot-inner { flex-direction: column; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition: none !important; }
+@media (max-width: 767px) {
+  /* Two cats side by side instead of two full-width circles. */
+  .cats-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; width: 100%; }
+  .cats-row img { margin-top: 32px; }
+  .board-group h3 { font-size: 18px; margin-bottom: 18px; }
+  .board img { width: 48px; height: 48px; }
+  .people { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 18px 4px; }
+  .friends { gap: 4px 14px; font-size: 13px; }
 }
