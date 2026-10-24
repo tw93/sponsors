@@ -41,5 +41,5 @@ https://cats.tw93.fun?name=<ProjectName>
 Embed the sponsor SVG in any README:
 
 ```markdown
-[![Sponsors](https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg)](https://cats.tw93.fun)
+[![Sponsors](https://raw.githubusercontent.com/tw93/sponsors/main/assets/sponsors.svg)](https://cats.tw93.fun)
 ```
