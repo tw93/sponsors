@@ -42,13 +42,13 @@ body {
   color: #504e49;
 }
 .board li a:hover { color: #36563c; }
+/* Long names wrap instead of being cut to an ellipsis. */
 .board li span {
   max-width: 100%;
-  overflow: hidden;
   font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   letter-spacing: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: break-word;
+  text-wrap: balance;
 }
 .board img { display: block; width: 64px; height: 64px; object-fit: cover; background: #f1eee5; }
 
@@ -90,6 +90,6 @@ body {
   .cats-row img { margin-top: 32px; }
   .board-group h3 { font-size: 18px; margin-bottom: 18px; }
   .board img { width: 48px; height: 48px; }
-  .people { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 18px 4px; }
+  .people { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 18px 4px; }
   .friends { gap: 4px 14px; font-size: 13px; }
 }
