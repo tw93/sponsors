@@ -50,16 +50,18 @@
 </head>
 
 <body>
-  <header class="nav wide">
-    <a class="mark" href="https://github.com/tw93" target="_blank" rel="noopener">Tw93</a>
-    <button class="lang-toggle" type="button" aria-label="Switch language / 切换语言"><span class="zh">EN</span><span class="en">中文</span></button>
+  <header class="nav-wrap wide">
+    <nav class="nav" aria-label="Tw93">
+      <a class="mark" href="https://github.com/tw93" target="_blank" rel="noopener"><img src="./assets/img/favicon.png" width="28" height="28" alt="" />Tw93</a>
+      <button class="lang-toggle" type="button" aria-label="Switch language / 切换语言"><span class="zh">English</span><span class="en">中文</span></button>
+    </nav>
   </header>
 
   <main>
     <section class="hero wide">
       <div class="hero-text">
-        <h1><span class="zh">请汤圆和可乐吃罐头</span><span class="en">Treat TangYuan and Coke to a can</span></h1>
-        <p class="lede"><span class="zh">如果<b class="product">我做的开源项目</b>帮到了你，可以请我家两只猫吃个罐头</span><span class="en">If <b class="product">my open source work</b> helped you, treat my two cats to a can of food</span></p>
+        <h1><span class="zh">汤圆和可乐</span><span class="en">TangYuan &amp; Coke</span></h1>
+        <p class="tagline"><span class="zh">如果<b class="product">我做的开源项目</b>帮到了你，可以请我家这两只猫吃个罐头</span><span class="en">If <b class="product">my open source work</b> helped you, treat my two cats to a can of food</span></p>
       </div>
       <div class="cats">
         <figure>
@@ -73,32 +75,36 @@
       </div>
     </section>
 
-    <section class="pay wide" aria-label="Payment / 付款方式">
-      <article class="pay-card">
-        <div class="pay-visual"><img class="qr" src="./assets/img/wechat.png" width="548" height="548" alt="微信赞赏码 / WeChat tip code" /></div>
-        <h2><span class="zh">微信</span><span class="en">WeChat</span></h2>
-        <p class="hint for-pointer"><span class="zh">微信扫一扫</span><span class="en">Scan with WeChat</span></p>
-        <p class="hint for-touch"><span class="zh">截图后在微信扫一扫里选相册</span><span class="en">Save it, then pick it from Photos in WeChat Scan</span></p>
-        <p class="hint for-wechat"><span class="zh">长按赞赏码识别</span><span class="en">Press and hold the code to open it</span></p>
-      </article>
-      <article class="pay-card">
-        <div class="pay-visual"><img class="qr" src="./assets/img/alipay.png" width="548" height="548" alt="支付宝收款码 / Alipay payment code" /></div>
-        <h2><span class="zh">支付宝</span><span class="en">Alipay</span></h2>
-        <p class="hint for-pointer"><span class="zh">支付宝扫一扫</span><span class="en">Scan with Alipay</span></p>
-        <a class="btn btn-secondary for-touch" href="https://qr.alipay.com/fkx19272a18zxc8gm1kqa5f"><span class="zh">打开支付宝</span><span class="en">Open Alipay</span></a>
-      </article>
-      <article class="pay-card github">
-        <div class="pay-visual"><svg class="gh-mark" viewBox="0 0 16 16" width="64" height="64" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></div>
-        <h2>GitHub Sponsors</h2>
-        <p class="hint"><span class="zh">按月 $5 起，也可以一次性</span><span class="en">Monthly from $5, or one-time</span></p>
-        <a class="btn btn-primary" href="https://github.com/sponsors/tw93" target="_blank" rel="noopener"><span class="zh">去 GitHub 赞助</span><span class="en">Sponsor on GitHub</span></a>
-      </article>
+    <section class="pay wide" id="pay">
+      <div class="section-head">
+        <h2 class="section-title"><span class="zh">请它们吃罐头</span><span class="en">Buy them a can</span></h2>
+        <p class="section-lede"><span class="zh">微信和支付宝扫码就行，GitHub Sponsors 可以按月或一次性赞助</span><span class="en">Scan with WeChat or Alipay, or sponsor monthly or once on GitHub</span></p>
+      </div>
+      <ul class="tiles">
+        <li class="tile wechat">
+          <div class="tile-face"><img class="qr" src="./assets/img/wechat.png" width="548" height="548" alt="微信赞赏码 / WeChat tip code" /></div>
+          <p class="tile-bar"><span class="zh">微信</span><span class="en">WeChat</span></p>
+          <p class="tile-note for-touch"><span class="zh">截图后用微信扫一扫</span><span class="en">Save it, then scan it in WeChat</span></p>
+          <p class="tile-note for-wechat"><span class="zh">长按赞赏码识别</span><span class="en">Press and hold the code to open it</span></p>
+        </li>
+        <li class="tile alipay">
+          <div class="tile-face"><img class="qr" src="./assets/img/alipay.png" width="548" height="548" alt="支付宝收款码 / Alipay payment code" /></div>
+          <p class="tile-bar"><span class="zh">支付宝</span><span class="en">Alipay</span></p>
+          <a class="tile-note for-touch" href="https://qr.alipay.com/fkx19272a18zxc8gm1kqa5f"><span class="zh">打开支付宝</span><span class="en">Open Alipay</span></a>
+        </li>
+        <li class="tile github">
+          <a class="tile-link" href="https://github.com/sponsors/tw93" target="_blank" rel="noopener">
+            <div class="tile-face"><svg class="gh-mark" viewBox="0 0 16 16" width="64" height="64" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><span class="tile-price"><span class="zh">按月 $5 起，也可以一次性</span><span class="en">Monthly from $5, or one-time</span></span></div>
+            <p class="tile-bar">GitHub Sponsors</p>
+          </a>
+        </li>
+      </ul>
     </section>
 
     <section class="board wide" id="thanks">
       <div class="section-head">
-        <h2><span class="zh">谢谢这些朋友</span><span class="en">Thank you</span></h2>
-        <p><span class="zh">名单每天自动更新，微信和支付宝的打赏我会手动补上</span><span class="en">The list updates every day, WeChat and Alipay tips are added by hand</span></p>
+        <h2 class="section-title"><span class="zh">谢谢这些朋友</span><span class="en">Thank you</span></h2>
+        <p class="section-lede"><span class="zh">名单每天自动更新，微信和支付宝的打赏我会手动补上</span><span class="en">The list updates every day, WeChat and Alipay tips are added by hand</span></p>
       </div>
       <!-- board:start -->
       <div class="board-group">
@@ -476,16 +482,21 @@
     </section>
   </main>
 
-  <footer class="foot wide">
-    <p><span class="zh">我做的开源项目</span><span class="en">My open source projects</span></p>
-    <nav aria-label="Projects">
-      <a href="https://github.com/tw93/Mole" target="_blank" rel="noopener">Mole</a>
-      <a href="https://github.com/tw93/Pake" target="_blank" rel="noopener">Pake</a>
-      <a href="https://github.com/tw93/Kaku" target="_blank" rel="noopener">Kaku</a>
-      <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener"><span class="zh">妙言</span><span class="en">MiaoYan</span></a>
-      <a href="https://github.com/tw93/Waza" target="_blank" rel="noopener">Waza</a>
-      <a href="https://github.com/tw93/Kami" target="_blank" rel="noopener">Kami</a>
-    </nav>
+  <footer class="foot">
+    <div class="foot-inner wide">
+      <a class="foot-mark" href="https://github.com/tw93" target="_blank" rel="noopener">Tw93</a>
+      <div class="foot-col">
+        <p class="foot-col-title"><span class="zh">我做的开源项目</span><span class="en">My open source projects</span></p>
+        <nav aria-label="Projects">
+          <a href="https://github.com/tw93/Mole" target="_blank" rel="noopener">Mole</a>
+          <a href="https://github.com/tw93/Pake" target="_blank" rel="noopener">Pake</a>
+          <a href="https://github.com/tw93/Kaku" target="_blank" rel="noopener">Kaku</a>
+          <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener"><span class="zh">妙言</span><span class="en">MiaoYan</span></a>
+          <a href="https://github.com/tw93/Waza" target="_blank" rel="noopener">Waza</a>
+          <a href="https://github.com/tw93/Kami" target="_blank" rel="noopener">Kami</a>
+        </nav>
+      </div>
+    </div>
   </footer>
 
   <script>

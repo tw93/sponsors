@@ -19,25 +19,31 @@
   unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 
-/* Kami tokens as the product sites use them; the brand is the wall's existing green, CIELAB L* 33. */
+/* The tokens mole.fit and kami.tw share, so the wall reads as the same family. */
 :root {
   --parchment: #f5f4ed;
   --ivory: #faf9f5;
   --warm-sand: #e8e6dc;
+  --border-soft: #f1eee5;
   --line: #d8d5c8;
+  --border-card: color-mix(in srgb, var(--border-soft) 70%, var(--line));
   --near-black: #363433;
   --dark-warm: #3d3d3a;
   --olive: #504e49;
   --stone: #6b6a64;
-  --brand: #36563c;
-  --brand-light: #4a6e50;
+  --brand: #144a74;
+  --ink: #34558a;
+  --mole-dark: #33302a;
+  --mole-ink: #f4f2ec;
   --active-ring: #fac965;
+  /* The old wall's bars, darkened until white labels clear 4.5:1. */
+  --wechat: #07803e;
+  --alipay: #1368e0;
+  --github: #24292f;
   --serif: Charter, Georgia, "Cats Serif SC", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", serif;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   --gutter: 64px;
-  --radius-card: 20px;
-  --radius-pill: 999px;
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --section-gap: 84px;
 }
 
 html[data-lang="zh"] .en,
@@ -56,146 +62,140 @@ body {
   text-rendering: optimizeLegibility;
 }
 p { text-wrap: pretty; }
-a { color: var(--brand); text-decoration: none; }
-a:hover { color: var(--brand-light); }
+a { color: var(--ink); text-decoration: none; transition: color 0.12s ease-out; }
+a:hover { color: var(--brand); }
 :focus-visible {
   outline: 2px solid color-mix(in srgb, var(--brand) 55%, transparent);
   outline-offset: 3px;
   border-radius: 6px;
 }
 
-.wide { max-width: 1120px; margin: 0 auto; padding-inline: var(--gutter); }
+.wide { max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
 
-/* Nav */
+/* Nav: the parchment glass pill from mole.fit, pulled out by its padding so the mark lines up with the column. */
+.nav-wrap { position: sticky; top: 0; z-index: 10; padding-top: 16px; }
 .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 28px;
-  padding-bottom: 28px;
+  margin-inline: -14px;
+  padding: 8px 8px 8px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ivory) 82%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
 }
-.mark { color: var(--near-black); font-size: 20px; font-weight: 600; letter-spacing: -0.2px; }
+.mark { display: inline-flex; align-items: center; gap: 10px; color: var(--near-black); font-size: 17px; font-weight: 600; }
 .mark:hover { color: var(--near-black); }
+.mark img { width: 28px; height: 28px; border-radius: 50%; }
 .lang-toggle {
   min-height: 36px;
-  padding: 6px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  background: var(--ivory);
-  color: var(--near-black);
-  font: 500 14px/1.4 var(--serif);
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--olive);
+  font: 400 14px/1.4 var(--serif);
   cursor: pointer;
-  transition: background-color 0.12s ease-out;
+  transition: background-color 0.12s ease-out, color 0.12s ease-out;
 }
-.lang-toggle:hover { background: var(--warm-sand); }
+.lang-toggle:hover { background: var(--warm-sand); color: var(--near-black); }
 
-/* Hero */
+/* Hero: the wordmark opening of the product sites, closed by the same faint hairline. */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 48px;
-  padding-top: 40px;
-  padding-bottom: 64px;
+  padding-top: 72px;
+  padding-bottom: 56px;
+  margin-bottom: var(--section-gap);
+  background: linear-gradient(var(--border-soft), var(--border-soft)) bottom / calc(100% - 2 * var(--gutter)) 1px no-repeat;
 }
 .hero h1 {
-  margin: 0;
+  margin: 0 0 28px;
   color: var(--near-black);
-  font-size: 52px;
-  font-weight: 600;
-  line-height: 1.18;
-  letter-spacing: -0.6px;
+  font-size: 88px;
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -1.4px;
   text-wrap: balance;
 }
-.lede { margin: 20px 0 0; text-wrap: balance; word-break: keep-all; color: var(--olive); font-size: 19px; line-height: 1.6; }
-.lede .product { color: var(--near-black); font-weight: 600; }
-.cats { display: flex; gap: 24px; }
+html[data-lang="zh"] .hero h1 { font-weight: 400; letter-spacing: 0; }
+.tagline { margin: 0; color: var(--olive); font-size: 21px; line-height: 1.5; text-wrap: pretty; }
+html[data-lang="zh"] .tagline { font-size: 19px; line-height: 1.6; word-break: keep-all; }
+.tagline .product { color: var(--near-black); font-weight: 600; }
+.cats { display: flex; gap: 20px; }
 .cats figure { margin: 0; text-align: center; }
 .cats img {
   display: block;
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
   background: var(--warm-sand);
 }
-.cats figcaption { margin-top: 12px; color: var(--olive); font-size: 15px; }
+.cats figcaption { margin-top: 12px; color: var(--stone); font-size: 14px; line-height: 1.4; }
 
-/* Payment cards */
-.pay {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  padding-bottom: 96px;
-}
-.pay-card {
+/* Section head: title, one lede, 24px to the content, as on mole.fit. */
+section { margin-bottom: var(--section-gap); }
+main > section:last-child { margin-bottom: 0; }
+.section-head { margin-bottom: 24px; }
+.section-title { margin: 0; color: var(--dark-warm); font-size: 32px; font-weight: 500; line-height: 1.2; letter-spacing: -0.3px; text-wrap: balance; }
+.section-lede { margin: 12px 0 0; color: var(--olive); font-size: 16px; line-height: 1.6; }
+html[data-lang="zh"] .section-lede { word-break: keep-all; }
+
+/* Payment tiles: the old wall's code-over-bar cards, redrawn in the paper palette. */
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
+.tile { display: flex; flex-direction: column; min-width: 0; }
+.tile-link { display: flex; flex-direction: column; color: inherit; }
+.tile-link:hover { color: inherit; }
+.tile-face {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 28px 28px;
-  border-radius: var(--radius-card);
-  background: var(--ivory);
-  text-align: center;
-}
-/* Every card opens on the same square, so the three titles share one line. */
-.pay-visual {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 208px;
+  gap: 18px;
   aspect-ratio: 1;
-}
-.pay-card .qr {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
+  padding: 32px;
+  border: 1px solid var(--border-card);
+  border-bottom: 0;
+  border-radius: 16px 16px 0 0;
   background: #fff;
 }
-.pay-card h2 { margin: 20px 0 0; color: var(--dark-warm); font-size: 20px; font-weight: 600; line-height: 1.3; }
-.pay-card .hint { margin: 6px 0 0; color: var(--stone); font-size: 15px; line-height: 1.5; }
-.gh-mark { display: block; width: 72px; height: 72px; color: var(--near-black); }
-/* The button adds 64px, so the mark's box gives that back and the three cards end on one line. */
-.pay-card.github .pay-visual { aspect-ratio: 208 / 144; }
-.pay-card.github .btn { margin-top: 20px; }
+.tile-face .qr { display: block; width: 100%; height: auto; }
+.gh-mark { display: block; width: 72px; height: 72px; color: var(--github); }
+.tile-price { color: var(--stone); font-size: 15px; line-height: 1.5; text-align: center; }
+.tile-bar {
+  margin: 0;
+  padding: 13px 16px;
+  border-radius: 0 0 16px 16px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  transition: background-color 0.12s ease-out;
+}
+.wechat .tile-bar { background: var(--wechat); }
+.alipay .tile-bar { background: var(--alipay); }
+.github .tile-bar { background: var(--github); }
+.tile-link:hover .tile-bar { background: color-mix(in srgb, var(--github) 86%, #fff); }
+.tile-note { margin: 12px 0 0; color: var(--stone); font-size: 14px; line-height: 1.5; text-align: center; }
+a.tile-note { color: var(--ink); font-weight: 500; }
 
 .for-touch, .for-wechat { display: none !important; }
 @media (hover: none) and (pointer: coarse) {
-  .for-pointer { display: none !important; }
-  .for-touch { display: inline-flex !important; }
-  p.for-touch { display: block !important; }
+  .for-touch { display: block !important; }
+  /* In WeChat the Alipay link cannot leave the app, so the code stays the way in. */
   .in-wechat .for-touch { display: none !important; }
   .in-wechat .for-wechat { display: block !important; }
-  /* In WeChat the Alipay link cannot leave the app, so the code stays the way in. */
-  .in-wechat .pay-card a.for-touch { display: none !important; }
 }
-.pay-card a.for-touch { margin-top: 16px; }
-
-/* One button pair, as on the product sites. */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 158px;
-  min-height: 44px;
-  padding: 11px 28px;
-  border-radius: var(--radius-pill);
-  font: 500 15px/1.55 var(--serif);
-  transition: background-color 0.12s ease-out, border-color 0.12s ease-out;
-}
-.btn-primary { border: 1px solid var(--brand); background: var(--brand); color: var(--ivory); }
-.btn-primary:hover { border-color: var(--brand-light); background: var(--brand-light); color: var(--ivory); }
-.btn-secondary { border: 1px solid var(--line); background: var(--ivory); color: var(--near-black); }
-.btn-secondary:hover { background: var(--warm-sand); color: var(--near-black); }
 
 /* Thanks board */
-.board { padding-bottom: 96px; }
-.section-head { display: grid; gap: 12px; margin-bottom: 40px; text-align: center; }
-.section-head h2 { margin: 0; color: var(--dark-warm); font-size: 32px; font-weight: 500; line-height: 1.2; letter-spacing: -0.3px; }
-.section-head p { margin: 0; word-break: keep-all; color: var(--olive); font-size: 16px; line-height: 1.55; }
-.board-group + .board-group { margin-top: 56px; }
-.board-group h3 { margin: 0 0 24px; color: var(--dark-warm); font-size: 20px; font-weight: 600; text-align: center; }
+.board-group + .board-group { margin-top: 48px; }
+.board-group h3 { margin: 0 0 20px; color: var(--dark-warm); font-size: 20px; font-weight: 500; line-height: 1.3; }
 .board ul { margin: 0; padding: 0; list-style: none; }
 .board li a { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--olive); }
 .board li a:hover { color: var(--near-black); }
@@ -208,91 +208,73 @@ a:hover { color: var(--brand-light); }
 }
 .board img { display: block; width: 56px; height: 56px; object-fit: cover; background: var(--warm-sand); }
 
-.companies { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px 48px; }
+.companies { display: flex; flex-wrap: wrap; gap: 24px 40px; }
 .companies img { border-radius: 14px; }
 .companies li span { font-weight: 600; }
 
-.people { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 24px 8px; }
+/* Fixed cells spread edge to edge; the negative inset gives back the cell padding beside each avatar, so the first and
+   last avatars sit on the column edges like the headings above them. */
+.board .people { --cell: 104px; display: grid; grid-template-columns: repeat(auto-fill, var(--cell)); justify-content: space-between; gap: 24px 8px; margin-inline: calc((56px - var(--cell)) / 2); }
 .people img { border-radius: 50%; }
 .people .active img { box-shadow: 0 0 0 2px var(--parchment), 0 0 0 4px var(--active-ring); }
 
 /* Newest names lead in dark-warm and fade to stone, which still clears 4.5:1 on parchment. */
-.friends {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px 20px;
-  max-width: 960px;
-  margin: 0 auto;
-  font: 15px/1.6 var(--sans);
-}
+.friends { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0; font: 15px/1.6 var(--sans); }
 .friends span { color: var(--stone); color: color-mix(in srgb, var(--stone) calc(var(--age) * 100%), var(--dark-warm)); }
 
-/* Footer */
-.foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px 32px;
-  padding-top: 32px;
-  padding-bottom: 48px;
-  position: relative;
-  color: var(--stone);
-  font-size: 15px;
-}
-.foot::before { content: ""; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); border-top: 1px solid var(--line); }
-.foot p { margin: 0; }
+/* Footer: the full-bleed mole-brown band. */
+.foot { margin-top: var(--section-gap); padding: 56px 0 48px; background: var(--mole-dark); color: color-mix(in srgb, var(--mole-ink) 72%, transparent); }
+.foot-inner { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 24px 56px; }
+.foot-mark { color: #fff; font-size: 22px; font-weight: 500; line-height: 1.1; letter-spacing: -0.2px; }
+.foot-mark:hover { color: #fff; }
+.foot-col-title { margin: 0 0 12px; color: color-mix(in srgb, #fff 92%, transparent); font-size: 13px; font-weight: 600; letter-spacing: 0.2px; }
 .foot nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
-.foot a { color: var(--olive); }
-.foot a:hover { color: var(--near-black); }
+.foot nav a { color: color-mix(in srgb, var(--mole-ink) 68%, transparent); font-size: 15px; }
+.foot nav a:hover { color: #fff; }
 
 @media (max-width: 960px) {
   .hero { gap: 32px; }
+  .hero h1 { font-size: 72px; }
   .cats { gap: 16px; }
   .cats img { width: 160px; height: 160px; }
 }
 
-@media (max-width: 720px) {
-  .hero { grid-template-columns: 1fr; }
-}
-
-/* Below this the GitHub hint wraps in a third column, so the two codes sit side by side and GitHub takes the full row. */
-@media (max-width: 820px) {
-  .pay { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .pay-card.github { grid-column: 1 / -1; padding: 24px 20px; }
-  .pay-card.github .pay-visual { aspect-ratio: auto; }
-  .gh-mark { width: 48px; height: 48px; }
-}
-
 @media (max-width: 880px) {
-  :root { --gutter: 32px; }
-  .hero h1 { font-size: 40px; }
-  .section-head h2 { font-size: 26px; }
-  .pay { gap: 16px; }
-  .pay-card { padding: 24px 18px 22px; }
+  :root { --gutter: 32px; --section-gap: 72px; }
+  .hero h1 { font-size: 64px; letter-spacing: -1px; }
+  .tagline, html[data-lang="zh"] .tagline { font-size: 18px; }
+  .section-title { font-size: 26px; }
+  .tiles { gap: 16px; }
+  .tile-face { padding: 24px; }
+}
+
+@media (max-width: 720px) {
+  .hero { grid-template-columns: 1fr; padding-top: 48px; padding-bottom: 40px; }
+  /* Two codes side by side, GitHub on its own row. */
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tile.github { grid-column: 1 / -1; }
+  .github .tile-face { flex-direction: row; aspect-ratio: auto; gap: 16px; padding: 24px; }
+  .gh-mark { width: 44px; height: 44px; }
 }
 
 @media (max-width: 560px) {
   :root { --gutter: 20px; }
-  .nav { padding-top: 20px; padding-bottom: 20px; }
-  .hero { padding-top: 16px; padding-bottom: 40px; gap: 32px; }
-  .hero h1 { font-size: 32px; letter-spacing: -0.3px; }
-  .lede { font-size: 17px; }
-  .cats { gap: 16px; }
+  .nav-wrap { padding-top: 12px; }
+  .nav { margin-inline: -8px; padding-left: 10px; }
+  .hero { padding-top: 40px; gap: 28px; }
+  .hero h1 { margin-bottom: 20px; font-size: 52px; letter-spacing: -0.6px; }
+  .tagline, html[data-lang="zh"] .tagline { font-size: 17px; }
   .cats img { width: min(40vw, 160px); height: min(40vw, 160px); }
-  .pay { gap: 12px; padding-bottom: 72px; }
-  .pay-card { padding: 16px 12px 18px; border-radius: 16px; }
-  .pay-card h2 { margin-top: 12px; font-size: 18px; }
-  .pay-card .hint { font-size: 14px; }
-  .pay-card .qr { border-radius: 8px; }
-  .pay-card a.for-touch { min-width: 0; width: 100%; padding-inline: 12px; margin-top: 12px; }
-  .companies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 12px; }
-  .people { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 18px 4px; }
+  .tiles { gap: 12px; }
+  .tile-face { padding: 14px; }
+  .tile-bar { padding: 10px 8px; font-size: 15px; }
+  .companies { gap: 20px 28px; }
+  .board .people { --cell: 76px; gap: 18px 4px; margin-inline: calc((48px - var(--cell)) / 2); }
   .people img { width: 48px; height: 48px; }
   .board li span { font-size: 12px; }
   .friends { gap: 4px 16px; font-size: 14px; }
-  .foot { flex-direction: column; align-items: flex-start; }
+  .foot { padding: 40px 0 36px; }
+  .foot-inner { flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
